@@ -59,7 +59,7 @@ def scale_data(df, columns):
 
 # %%
 # scale dataset, but only relevant columns
-df_scaled = scale_data(df_sub, cols)
+df_scaled = scale_data(df_sub, cols).reset_index(drop=False)
 
 # plot to see distributions after scaling
 #for col in cols:
@@ -68,22 +68,17 @@ df_scaled = scale_data(df_sub, cols)
  
 # Fetch the column as a data frame
 
-data_to_encode = pd.DataFrame(data=ames_data['Bldg Type'], columns=['Bldg Type'])
- 
-# Create the encoder object
+data_to_encode = pd.DataFrame(data=train['Bldg Type'], columns=['Bldg Type'])
 
+# Create the encoder object
 one_hot_encoder = OneHotEncoder()
- 
- 
+
 new_data_array = one_hot_encoder.fit_transform(data_to_encode[['Bldg Type']]).toarray()
- 
- 
+
 new_column_names = one_hot_encoder.get_feature_names_out(['Bldg Type'])
- 
- 
-new_data = pd.DataFrame(data=new_data_array , columns=new_column_names)
- 
- 
+
+new_data = pd.DataFrame(data = new_data_array , columns=new_column_names)
+
 ames_data_encoded = pd.concat([new_data, df_scaled], axis=1)
 
 # %% [markdown]
