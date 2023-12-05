@@ -7,6 +7,8 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
+from sklearn.preprocessing import OneHotEncoder
+ 
 
 # %%
 # Step 1
@@ -63,7 +65,26 @@ df_scaled = scale_data(df_sub, cols)
 #for col in cols:
 #    sns.displot(data=df_scaled[col])
 
+ 
+# Fetch the column as a data frame
 
+data_to_encode = pd.DataFrame(data=ames_data['Bldg Type'], columns=['Bldg Type'])
+ 
+# Create the encoder object
+
+one_hot_encoder = OneHotEncoder()
+ 
+ 
+new_data_array = one_hot_encoder.fit_transform(data_to_encode[['Bldg Type']]).toarray()
+ 
+ 
+new_column_names = one_hot_encoder.get_feature_names_out(['Bldg Type'])
+ 
+ 
+new_data = pd.DataFrame(data=new_data_array , columns=new_column_names)
+ 
+ 
+ames_data_encoded = pd.concat([new_data, df_scaled], axis=1)
 
 # %% [markdown]
 # ### Linear Regression
