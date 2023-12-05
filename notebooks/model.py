@@ -29,7 +29,7 @@ train, test = train_test_split(df, test_size=0.2)
 # %%
 # list of columns that need scaling
 cols = ["Overall Qual", "Overall Cond", "Lot Area log", "Gr Liv Area log",
-        "TotRms AbvGrd", "Total Bsmt SF", "Garage Area"]
+        "TotRms AbvGrd", "Total Bsmt SF", "Garage Area", "Total Bathrooms"]
 
 # subset dataset to include target columns + outcome variable
 df_sub = train[cols + ["SalePrice log"]].copy()
