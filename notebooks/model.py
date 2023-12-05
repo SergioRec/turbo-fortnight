@@ -5,10 +5,14 @@ import numpy as np
 
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.tree import DecisionTreeRegressor
 
 # %%
 # Step 1
 ames_data = pd.read_csv("../data/ames.csv")
+
+# %%
 zones = ["RL", "RM", "RH"]
 ames_data = ames_data[ames_data["MS Zoning"].isin(zones)]
 ames_data["Total Bathrooms"] = (
@@ -22,6 +26,7 @@ ames_data = ames_data[
      "TotRms AbvGrd", "Total Bathrooms", "Garage Area", "Bldg Type",
      "Total Bsmt SF", "SalePrice"]
 ]
+
 ames_data = ames_data.dropna()
 ames_data["Lot Area"] = np.log(ames_data["Lot Area"])
 ames_data["Gr Liv Area"] = np.log(ames_data["Gr Liv Area"])
@@ -57,3 +62,37 @@ df_scaled = scale_data(df_sub, cols)
 # plot to see distributions after scaling
 #for col in cols:
 #    sns.displot(data=df_scaled[col])
+
+
+
+# %% [markdown]
+# ### Linear Regression
+
+# %%
+# Create model object
+linear_regressor = LinearRegression()
+
+# Fit model
+linear_regressor.fit(X_train, y_train);
+
+# Generate predictions from data.
+y_pred_linear_regressor = linear_regressor.predict(X_test)
+
+# %% [markdown]
+# ### Decision Tree Regressor
+
+# %%
+# Create model object
+decision_tree_regressor = DecisionTreeRegressor()
+
+# Fit model
+decision_tree_regressor.fit(X_train, y_train);
+
+# Generate predictions from data.
+y_pred_decision_tree_regressor = decision_tree_regressor.predict(X_test);
+
+# %% [markdown]
+# ### Model Evaluation
+
+# %%
+
