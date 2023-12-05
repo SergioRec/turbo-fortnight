@@ -1,6 +1,8 @@
 """Scale and train/test split of the ames dataset.
 
 Metadata: https://jse.amstat.org/v19n3/decock/DataDocumentation.txt
+
+Step 2
 """
 # %%
 import pandas as pd
