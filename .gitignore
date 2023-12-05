@@ -5,7 +5,7 @@ outputs/*
 ### Contentious file types (can be removed at user discretion) ###
 
 # consider using jupytext and .py files for better version control of notebooks!
-*.ipynb
+
 
 *.Rproj
 
