@@ -328,7 +328,7 @@ print(f"R-squared: {r2}")
 
 # %%
 # importances
-importances = model_RF.feature_importances_
+importances = model_grid.best_estimator_.feature_importances_
 indices = np.argsort(importances)
 
 fig, ax = plt.subplots()
