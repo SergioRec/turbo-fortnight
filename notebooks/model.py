@@ -40,7 +40,6 @@ ames_data = ames_data.astype({"Total Bathrooms": "int64"})
 
 # %%
 # Step 2
-# splits between train and test datasets
 
 # %%
 # list of columns that need scaling
@@ -50,6 +49,7 @@ cols = ["Overall Qual", "Overall Cond", "Lot Area", "Gr Liv Area",
 # subset dataset to include target columns + outcome variable
 df_sub = ames_data[cols + ["SalePrice"] + ["Bldg Type"]].copy()
 
+# splits between train and test datasets
 train, test = train_test_split(df_sub, test_size=0.2)
 
 # %%
@@ -62,9 +62,6 @@ def scale_data(train_df, test_df, columns):
     test_df[columns] = scaler.transform(test_df[columns])
 
     return train_df, test_df
-
-
-
 
 # %%
 train_scaled, test_scaled = scale_data(train,test,cols)
