@@ -11,6 +11,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+from sklearn.inspection import permutation_importance
 
 # %%
 # Step 1
@@ -67,7 +68,7 @@ def scale_data(train_df, test_df, columns):
 train_scaled, test_scaled = scale_data(train, test, cols)
 
 # One Hot Encoding
-one_hot_encoder = OneHotEncoder()
+one_hot_encoder = OneHotEncoder(drop="first")
 
 
 def one_hot_encoder_bldg_type(df_scaled):
@@ -104,10 +105,12 @@ ames_data_encoded_test = one_hot_encoder_bldg_type(test)
 
 # For the training set(scaled)
 X_train_scaled = ames_data_encoded_train_scaled.drop('SalePrice', axis=1)  # Features: Drop the target variable
+X_train_scaled = X_train_scaled.drop('Bldg Type_2fmCon', axis=1)  # Drop first one-hot-encoded category to prevent perfect multicollinearity in LR
 y_train_scaled = ames_data_encoded_train_scaled['SalePrice']  # Target: Only the 'SalePrice' column
 
 # For the testing set(scaled)
 X_test_scaled = ames_data_encoded_test_scaled.drop('SalePrice', axis=1)  # Features: Drop the target variable
+X_test_scaled = X_test_scaled.drop('Bldg Type_2fmCon', axis=1)  # Drop first one-hot-encoded category to prevent perfect multicollinearity in LR
 y_test_scaled = ames_data_encoded_test_scaled['SalePrice']  # Target: Only the 'SalePrice' column
 
 # For the training set(non-scaled)
@@ -173,6 +176,7 @@ plt.xlabel("Predicted")
 plt.ylabel("Residual")
 plt.show()
 
+# %%
 # Print cross-validation scores and evaluation metrics
 print("Linear Regression:")
 print("Cross-Validation RMSE scores:", rmse_scores)
@@ -186,7 +190,28 @@ print(f"Mean Squared Error (MSE): {mse}")
 print(f"Root Mean Squared Error (RMSE): {rmse}")
 print(f"R-squared: {r2}\n")
 
-
+# %%
+# %%
+# compute importances
+model_fi = permutation_importance(
+    model_LR, X_train_scaled, y_train_scaled, n_repeats=50
+)
+importances = (
+    pd.DataFrame(
+        np.stack(
+            [model_fi.importances_mean, np.array(X_train_scaled.columns)],
+            axis=1
+        ),
+        columns=["Importance", "Variable"]
+    )
+    .sort_values("Importance", ascending=False)
+)
+sns.barplot(
+    x=importances["Importance"],
+    y=importances["Variable"],
+    color="lightblue"
+)
+plt.show()
 # %% [markdown]
 # ### Decision Tree Regressor
 
