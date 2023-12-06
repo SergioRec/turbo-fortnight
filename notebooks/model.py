@@ -286,15 +286,16 @@ print(f"R-squared: {r2}\n")
 # Initialize the Random Forest Regressor
 model_RF = RandomForestRegressor()
 
-grid_space={'max_depth':[3,5,10,None],
-              'n_estimators':[10,100,200],
-              'max_features':[1,3,5,7],
-              'min_samples_leaf':[1,2,3],
-              'min_samples_split':[1,2,3]
-           }
+grid_space = {
+    'max_depth': [3, 5, 10, None],
+    'n_estimators': [10, 100, 200],
+    'max_features': [1, 3, 5, 7],
+    'min_samples_leaf': [1, 2, 3],
+    'min_samples_split': [1, 2, 3]
+}
 
-grid = GridSearchCV(model_RF,param_grid=grid_space,cv=3,scoring='r2')
-model_grid = grid.fit(X_train,y_train)
+grid = GridSearchCV(model_RF, param_grid=grid_space, cv=3, scoring='r2')
+model_grid = grid.fit(X_train, y_train)
 
 print('Best hyperparameters are: '+str(model_grid.best_params_))
 print('Best score is: '+str(model_grid.best_score_))
@@ -332,7 +333,7 @@ importances = model_grid.best_estimator_.feature_importances_
 indices = np.argsort(importances)
 
 fig, ax = plt.subplots()
-ax.barh(range(len(importances)), importances[indices])
+ax.barh(range(len(importances)), importances[indices], color="lightblue")
 ax.set_yticks(range(len(importances)))
 _ = ax.set_yticklabels(np.array(X_train.columns)[indices])
 
