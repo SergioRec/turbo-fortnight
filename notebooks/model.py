@@ -49,7 +49,7 @@ cols = ["Overall Qual", "Overall Cond", "Lot Area", "Gr Liv Area",
 df_sub = ames_data[cols + ["SalePrice"] + ["Bldg Type"]].copy()
 
 # splits between train and test datasets
-train, test = train_test_split(df_sub, test_size=0.2)
+train, test = train_test_split(df_sub, test_size=0.2, random_state=57)
 
 
 # %%
