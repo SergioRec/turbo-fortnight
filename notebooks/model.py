@@ -315,3 +315,15 @@ print(f"Mean Absolute Error (MAE): {mae}")
 print(f"Mean Squared Error (MSE): {mse}")
 print(f"Root Mean Squared Error (RMSE): {rmse}")
 print(f"R-squared: {r2}")
+
+# %%
+# importances
+importances = model_RF.feature_importances_
+indices = np.argsort(importances)
+
+fig, ax = plt.subplots()
+ax.barh(range(len(importances)), importances[indices])
+ax.set_yticks(range(len(importances)))
+_ = ax.set_yticklabels(np.array(X_train.columns)[indices])
+
+# %%
