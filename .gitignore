@@ -22,7 +22,6 @@ outputs/*
 # Office files
 *.doc
 *.docx
-*.pptx
 *.xlsx
 *.odt
 *.ods
