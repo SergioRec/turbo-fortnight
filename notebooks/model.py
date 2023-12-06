@@ -12,6 +12,7 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.inspection import permutation_importance
+from sklearn.model_selection import GridSearchCV
 
 # %%
 # Step 1
@@ -285,31 +286,21 @@ print(f"R-squared: {r2}\n")
 # Initialize the Random Forest Regressor
 model_RF = RandomForestRegressor()
 
-# Cross-validation for RMSE
-rmse_scores = np.sqrt(
-    -cross_val_score(
-        model_RF,
-        X_train,
-        y_train,
-        cv=5,
-        scoring='neg_mean_squared_error'
-    )
-)
+grid_space={'max_depth':[3,5,10,None],
+              'n_estimators':[10,100,200],
+              'max_features':[1,3,5,7],
+              'min_samples_leaf':[1,2,3],
+              'min_samples_split':[1,2,3]
+           }
 
-# Cross-validation for MSE
-mse_scores = -cross_val_score(
-    model_RF,
-    X_train,
-    y_train,
-    cv=5,
-    scoring='neg_mean_squared_error'
-)
+grid = GridSearchCV(model_RF,param_grid=grid_space,cv=3,scoring='r2')
+model_grid = grid.fit(X_train,y_train)
 
-# Train the model on scaled data
-model_RF.fit(X_train, y_train)
+print('Best hyperparameters are: '+str(model_grid.best_params_))
+print('Best score is: '+str(model_grid.best_score_))
 
 # Make predictions using the scaled test set
-y_pred = model_RF.predict(X_test)
+y_pred = model_grid.predict(X_test)
 
 # Evaluate the model
 mae = mean_absolute_error(y_test, y_pred)
@@ -330,12 +321,6 @@ plt.show()
 
 # Print cross-validation scores and evaluation metrics
 print("Random Forest Regressor:")
-print("Cross-Validation RMSE scores:", rmse_scores)
-print("Mean of Cross-Validation RMSE scores:", rmse_scores.mean())
-print("Standard Deviation of Cross-Validation RMSE scores:", rmse_scores.std())
-print("Cross-Validation MSE scores:", mse_scores)
-print("Mean of Cross-Validation MSE scores:", mse_scores.mean())
-print("Standard Deviation of Cross-Validation MSE scores:", mse_scores.std())
 print(f"Mean Absolute Error (MAE): {mae}")
 print(f"Mean Squared Error (MSE): {mse}")
 print(f"Root Mean Squared Error (RMSE): {rmse}")
