@@ -4,18 +4,16 @@ import seaborn as sns
 import numpy as np
 
 from sklearn.preprocessing import MinMaxScaler
-from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 
 # %%
 # Step 1
-ames_data = pd.read_csv("ames.csv")
+ames_data = pd.read_csv("../data/ames.csv")
 
 # %%
 zones = ["RL", "RM", "RH"]
@@ -52,6 +50,7 @@ df_sub = ames_data[cols + ["SalePrice"] + ["Bldg Type"]].copy()
 # splits between train and test datasets
 train, test = train_test_split(df_sub, test_size=0.2)
 
+
 # %%
 #scaling training and test data function
 def scale_data(train_df, test_df, columns):
@@ -62,36 +61,41 @@ def scale_data(train_df, test_df, columns):
 
     return train_df, test_df
 
+
 # %%
-train_scaled, test_scaled = scale_data(train,test,cols)
-
-
-# plot to see distributions after scaling
-#for col in cols:
-#    sns.displot(data=train_scaled[col])
+train_scaled, test_scaled = scale_data(train, test, cols)
 
 # One Hot Encoding
 one_hot_encoder = OneHotEncoder()
 
 def one_hot_encoder_bldg_type(df_scaled):
     """One hot encoder for train and test scaled data"""
-    data_to_encode = pd.DataFrame(data=df_scaled['Bldg Type'], columns=['Bldg Type'])
-    new_data_array = one_hot_encoder.fit_transform(data_to_encode[['Bldg Type']]).toarray()
+    data_to_encode = (
+        pd.DataFrame(data=df_scaled['Bldg Type'], columns=['Bldg Type'])
+    )
+    new_data_array = (
+        one_hot_encoder.fit_transform(data_to_encode[['Bldg Type']]).toarray()
+    )
     new_column_names = one_hot_encoder.get_feature_names_out(['Bldg Type'])
-    new_data = pd.DataFrame(data=new_data_array , columns=new_column_names)
-    ames_data_encoded = pd.concat([new_data.reset_index(drop=True), df_scaled.reset_index(drop=True)], axis=1)
+    new_data = pd.DataFrame(data=new_data_array, columns=new_column_names)
+    ames_data_encoded = (
+        pd.concat(
+            [
+                new_data.reset_index(drop=True),
+                df_scaled.reset_index(drop=True)
+            ],
+            axis=1
+        )
+    )
     ames_data_encoded = ames_data_encoded.drop('Bldg Type', axis=1)
     return ames_data_encoded
 
-ames_data_encoded_train_scaled = one_hot_encoder_bldg_type(train_scaled)
 
+ames_data_encoded_train_scaled = one_hot_encoder_bldg_type(train_scaled)
 ames_data_encoded_test_scaled = one_hot_encoder_bldg_type(test_scaled)
 
 ames_data_encoded_train = one_hot_encoder_bldg_type(train)
-
 ames_data_encoded_test = one_hot_encoder_bldg_type(test)
-
-
 
 # %% [markdown]
 # ### Linear Regression
@@ -117,7 +121,7 @@ y_test = ames_data_encoded_test['SalePrice']  # Target: Only the 'SalePrice' col
 model_LR = LinearRegression()
 
 # Fit model
-model_LR.fit(X_train_scaled, y_train_scaled);
+model_LR.fit(X_train_scaled, y_train_scaled)
 
 
 # %% [markdown]
@@ -125,10 +129,24 @@ model_LR.fit(X_train_scaled, y_train_scaled);
 
 # %%
 # Cross-validation for RMSE
-rmse_scores = np.sqrt(-cross_val_score(model_LR, X_train_scaled, y_train, cv=5, scoring='neg_mean_squared_error'))
+rmse_scores = np.sqrt(
+    -cross_val_score(
+        model_LR,
+        X_train_scaled,
+        y_train,
+        cv=5,
+        scoring='neg_mean_squared_error'
+    )
+)
 
 # Cross-validation for MSE
-mse_scores = -cross_val_score(model_LR, X_train_scaled, y_train_scaled, cv=5, scoring='neg_mean_squared_error')
+mse_scores = -cross_val_score(
+    model_LR,
+    X_train_scaled,
+    y_train_scaled,
+    cv=5,
+    scoring='neg_mean_squared_error'
+)
 
 # Train the model
 model_LR.fit(X_train_scaled, y_train_scaled)
@@ -164,19 +182,31 @@ print(f"R-squared: {r2}\n")
 model_DT = DecisionTreeRegressor()
 
 # Fit model
-model_DT.fit(X_train, y_train);
-
-
+model_DT.fit(X_train, y_train)
 
 # %% [markdown]
 # ### Model Evaluation
 
 # %%
 # Cross-validation for RMSE
-rmse_scores = np.sqrt(-cross_val_score(model_DT, X_train, y_train, cv=5, scoring='neg_mean_squared_error'))
+rmse_scores = np.sqrt(
+    -cross_val_score(
+        model_DT,
+        X_train,
+        y_train,
+        cv=5,
+        scoring='neg_mean_squared_error'
+    )
+)
 
 # Cross-validation for MSE
-mse_scores = -cross_val_score(model_DT, X_train, y_train, cv=5, scoring='neg_mean_squared_error')
+mse_scores = -cross_val_score(
+    model_DT,
+    X_train,
+    y_train,
+    cv=5,
+    scoring='neg_mean_squared_error'
+)
 
 # Train the model
 model_DT.fit(X_train, y_train)
@@ -203,16 +233,28 @@ print(f"Mean Squared Error (MSE): {mse}")
 print(f"Root Mean Squared Error (RMSE): {rmse}")
 print(f"R-squared: {r2}\n")
 
-
-
 # Initialize the Random Forest Regressor
 model_RF = RandomForestRegressor()
 
 # Cross-validation for RMSE
-rmse_scores = np.sqrt(-cross_val_score(model_RF, X_train, y_train, cv=5, scoring='neg_mean_squared_error'))
+rmse_scores = np.sqrt(
+    -cross_val_score(
+        model_RF,
+        X_train,
+        y_train,
+        cv=5,
+        scoring='neg_mean_squared_error'
+    )
+)
 
 # Cross-validation for MSE
-mse_scores = -cross_val_score(model_RF, X_train, y_train, cv=5, scoring='neg_mean_squared_error')
+mse_scores = -cross_val_score(
+    model_RF,
+    X_train,
+    y_train,
+    cv=5,
+    scoring='neg_mean_squared_error'
+)
 
 # Train the model on scaled data
 model_RF.fit(X_train, y_train)
