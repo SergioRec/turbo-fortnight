@@ -52,7 +52,7 @@ train, test = train_test_split(df_sub, test_size=0.2)
 
 
 # %%
-#scaling training and test data function
+# scaling training and test data function
 def scale_data(train_df, test_df, columns):
     """Scale train and test data"""
     scaler = MinMaxScaler()
@@ -67,6 +67,7 @@ train_scaled, test_scaled = scale_data(train, test, cols)
 
 # One Hot Encoding
 one_hot_encoder = OneHotEncoder()
+
 
 def one_hot_encoder_bldg_type(df_scaled):
     """One hot encoder for train and test scaled data"""
