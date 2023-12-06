@@ -55,8 +55,7 @@ train, test = train_test_split(df_sub, test_size=0.2)
 # %%
 #scaling training and test data function
 def scale_data(train_df, test_df, columns):
-
-    """Scale data."""
+    """Scale train and test data"""
     scaler = MinMaxScaler()
     train_df[columns] = scaler.fit_transform(train_df[columns])
     test_df[columns] = scaler.transform(test_df[columns])
