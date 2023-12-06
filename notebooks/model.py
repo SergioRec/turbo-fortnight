@@ -2,6 +2,7 @@
 import pandas as pd
 import seaborn as sns
 import numpy as np
+import matplotlib.pyplot as plt
 
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.linear_model import LinearRegression
@@ -161,6 +162,17 @@ mse = mean_squared_error(y_test_scaled, y_pred)
 rmse = np.sqrt(mse)
 r2 = r2_score(y_test_scaled, y_pred)
 
+# pred vs actual to check for bias
+sns.scatterplot(x=y_pred, y=y_test_scaled)
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.show()
+
+sns.scatterplot(x=y_pred, y=(y_test_scaled - y_pred))
+plt.xlabel("Predicted")
+plt.ylabel("Residual")
+plt.show()
+
 # Print cross-validation scores and evaluation metrics
 print("Linear Regression:")
 print("Cross-Validation RMSE scores:", rmse_scores)
@@ -221,6 +233,17 @@ mse = mean_squared_error(y_test, y_pred)
 rmse = np.sqrt(mse)
 r2 = r2_score(y_test, y_pred)
 
+# pred vs actual to check for bias
+sns.scatterplot(x=y_pred, y=y_test)
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.show()
+
+sns.scatterplot(x=y_pred, y=(y_test - y_pred))
+plt.xlabel("Predicted")
+plt.ylabel("Residual")
+plt.show()
+
 # Print cross-validation scores and evaluation metrics
 print("Decision Tree:")
 print("Cross-Validation RMSE scores:", rmse_scores)
@@ -268,6 +291,17 @@ mae = mean_absolute_error(y_test, y_pred)
 mse = mean_squared_error(y_test, y_pred)
 rmse = np.sqrt(mse)
 r2 = r2_score(y_test, y_pred)
+
+# pred vs actual to check for bias
+sns.scatterplot(x=y_pred, y=y_test)
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.show()
+
+sns.scatterplot(x=y_pred, y=(y_test - y_pred))
+plt.xlabel("Predicted")
+plt.ylabel("Residual")
+plt.show()
 
 # Print cross-validation scores and evaluation metrics
 print("Random Forest Regressor:")
